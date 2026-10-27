@@ -1,3 +1,5 @@
+import StickyNote from "./sticky_note";
+
 export default class StickyNoteMapper {
     static fromJson(snRaw: any): StickyNote[] {
         return snRaw.map(
