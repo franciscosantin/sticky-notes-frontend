@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import StickyNoteComp from "./sticky_note";
 import { useState, useEffect } from "react";
 import NotesService from "./notes_service";
+import StickyNote from "./sticky_note";
+import StickyNoteComp from "./sticky_note_comp";
 
 export default function NotasAdhesivasPage() {
   const [ loading, setLoading ] = useState<boolean>(false)
@@ -89,6 +89,12 @@ export default function NotasAdhesivasPage() {
         <button className={btnStyle} onClick={onAddStickyNote}>Agregar</button>
       </div>
       <h2 className={`m-auto mb-5 ${titleStyle}`}>Notas:</h2>
+      {(() => {
+        return loading ? <p>Cargando...</p> : null;
+      })()}
+      {(() => {
+        return error && error.length > 0 ? <p>{error}</p> : null;
+      })()}
       {(() => {
         if (stickyNotes.length > 0) {
           return stickyNotes.map(sn => (

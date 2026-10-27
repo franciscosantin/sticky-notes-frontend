@@ -5,3 +5,5 @@ type StickyNote = {
   bgColor: string;
   validUntil: string;
 };
+
+export default StickyNote;

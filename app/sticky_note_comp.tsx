@@ -3,6 +3,14 @@
 import React from 'react';
 import { useState } from "react";
 import NotesService, { UpdateStickyNote } from './notes_service';
+import StickyNote from "./sticky_note";
+
+const Loading = () => {
+  return (<p>Cargando...</p>);
+}
+const Error = ({ errorText }: { errorText: string }) => {
+  return (<p>{errorText}</p>);
+} 
 
 const StickyNoteComp = ({ id, title, body, bgColor, validUntil, onDelete, onEditedFields }: {
   id: string;
@@ -19,7 +27,7 @@ const StickyNoteComp = ({ id, title, body, bgColor, validUntil, onDelete, onEdit
   const [edTitle, setTitle] = useState(title);
   const [edBody, setEdBody] = useState(body);
   const [edBgColor, setEdBgColor] = useState(bgColor);
-  const [edValidUntil, setEdValidUntil] = useState(validUntil);
+  const [edValidUntil, setEdValidUntil] = useState('');
   const deleteNote = async (id: string) => {
     try {
       setError('');
@@ -49,6 +57,15 @@ const StickyNoteComp = ({ id, title, body, bgColor, validUntil, onDelete, onEdit
   const btnStyle = "inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-50";
   const inputStyle = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm transition-colors placeholder:text-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-100";
   const labelStyle = "mb-1.5 block text-sm font-semibold leading-5 text-gray-100";
+  const trailing = 
+    (<>
+      {(() => {
+        return loading ? <Loading></Loading> : null;
+      })()}
+      {(() => {
+        return error && error.length > 0 ? <Error errorText={error}></Error> : null;
+      })()}
+    </>);
   if (editEnabled) {
     return (
       <>
@@ -77,6 +94,7 @@ const StickyNoteComp = ({ id, title, body, bgColor, validUntil, onDelete, onEdit
             if (result) onEditedFields(result.title, result.body, result.bgColor, result.validUntil);
             setEditEnabled(false);
           }}>Guardar</button>
+          {trailing}
         </div>
       </>
     );
@@ -93,6 +111,7 @@ const StickyNoteComp = ({ id, title, body, bgColor, validUntil, onDelete, onEdit
           onDelete();
         }}>Eliminar</button>
         <button className={btnStyle} onClick={() => setEditEnabled(true)}>Editar</button>
+        {trailing}
       </div>
     </>
   );
